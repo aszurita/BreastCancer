@@ -1,0 +1,155 @@
+
+.body{
+    background-color: rgb(233, 212, 198);
+    width: 100%;
+    height: 100%;
+}
+.Titulo{
+    color: #f2e6e6;
+    font-size: 40px;
+    font-weight: bold;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.margin-left{
+    margin-left: 15vw;
+}
+.row_header{
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-right: -3%;
+    padding-left: -3%;
+}
+.Header{
+    background-color: rgb(26, 77, 128);
+    color: white;
+    height: auto;
+    width :auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all ease.8s;
+    position: relative;
+    z-index:97;
+    overflow: hidden;
+
+}
+.col1_1{
+    margin-left: 10vw;
+    margin-right: 10vw;
+    margin-top: 1vw;
+    margin-bottom: 1vw;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+.centrado h6{
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.content-center{
+    display: flex;
+    align-items: center;
+    place-content: center;
+}
+
+.contentx-center{
+    display: flex;
+    align-items: center;
+}
+.align-content{
+    text-align: center;
+}
+
+.imagen_tumor{
+    height: 500px;
+    width: 700px;
+}
+
+.text-fuente{
+    font-size: 15px;
+    font-family:sans-serif;
+}
+
+.mt-4{
+    margin-top: 4rem;
+}
+.border{
+    border-radius: 50px;
+}
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 1500px; /* O el ancho que desees */
+    background-color: #007BFF; /* Azul */
+    margin-bottom: 20vh;
+    margin-top: 5vh;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.circle {
+    background-image: url('https://static.vecteezy.com/system/resources/thumbnails/003/428/270/small_2x/businessman-explain-pose-character-design-free-vector.jpg');
+    position: absolute;
+    top: -25px; /* Ajusta la posición como necesites */
+    left: -25px; /* Ajusta la posición como necesites */
+    width: 150px; /* O el tamaño del círculo que desees */
+    height: 150px; /* O el tamaño del círculo que desees */
+    border-radius: 50%; /* Esto hace que sea un círculo */
+    background-size: cover;
+    background-position: center;
+}
+
+.SanSerif{
+    font-family:sans-serif;
+}
+
+
+.text-margin{
+    font-size: 50px;
+    font: weight 5px;
+    margin-top: 20px;
+}
+
+.card {
+    border: 1px solid #ddd;
+    display: flex;
+    place-items: center;
+    flex-direction: column;
+    width: 400px;
+}
+
+.card-title {
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-family:sans-serif;
+    padding: 5px;
+    width: 370px;
+    text-align: justify;
+}
+
+.row_info{
+    display:flex;
+    justify-content:space-around;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.row_info2{
+    display:flex;
+    justify-content: center;
+    align-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0;
+}

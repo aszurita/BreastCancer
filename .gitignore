@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-/Super_Smash_Bros/target/
-=======
 /.vscode
 /.DS_Store
 
@@ -164,4 +161,3 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
->>>>>>> 63bc8d7fd49e6e6256b96021dc327ba067f1473b
