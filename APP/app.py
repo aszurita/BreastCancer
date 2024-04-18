@@ -1,54 +1,38 @@
-from datetime import datetime
 import dash
 import dash_bootstrap_components as dbc
-import os
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
-from scipy.interpolate import interp1d
-import pandas as pd
-import math
-external_stylesheets = [dbc.themes.BOOTSTRAP]  
-from dash import Dash, dcc, html,callback
+from dash import Dash, dcc, html,callback,dash_table
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+import pandas as pd
+import pickle
+import plotly.express as px
+import plotly.graph_objects as go
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+import os
+import warnings
+
+
+external_stylesheets = [dbc.themes.BOOTSTRAP]  
+warnings.filterwarnings('ignore')
 # bootstrap theme
 # https://bootswatch.com/lux/
 # external_stylesheets = [dbc.themes.SANDSTONE]
 
 
-app = Dash(__name__, suppress_callback_exceptions=True,external_stylesheets=external_stylesheets) #external_stylesheets=external_stylesheets
+app = Dash(__name__, suppress_callback_exceptions=True,external_stylesheets=external_stylesheets)
 server = app.server
 # building the navigation bar
 # https://github.com/facultyai/dash-bootstrap-components/blob/master/examples/advanced-component-usage/Navbars.py
 
-navbar = dbc.Navbar(
-    dbc.Container(
-        [
-            html.A(
-                # Use row and col to control vertical alignment of logo / brand
-                dbc.Row(
-                    [
-                        dbc.Col(html.Img(src="assets/Images/logo_espol.png", height="460px"),className="col1_1"),
-                        dbc.Col(html.H6("PROYECTO CALCULO VECTORIAL"),style={"color":"white","font-size":"20vw"},className="Titulo"),
-                        dbc.Col(html.H6("GRUPO 6"),style={"color":"white","font-size":"10vw"},className="col1")
-                    ],
-                    align='center',
-                    justify='center'
-
-                ),
-                className="row_header g-0"
-            ),
-        ]
-    ),
-    style={'justifyContent':'space-around'},
-    color="dark",
-    dark=True,
+Titulo = dbc.Row(
+    html.H1('Prediction of malignant and benign tumors in breast cancer'.upper()),class_name='margintTitle' 
 )
+
 navbar2 = dbc.Row(
             [
                 dbc.Col(html.Img(src="assets/images/logo_espol.png", height="41px",className="col1_1")),
-                dbc.Col(html.H5("PREDICTION OF MALIGNANT OR BENIGN CANCER"),style={"color":"white","font-size":"10vw"},className="col1_1"),
+                dbc.Col(html.H5(""),style={"color":"white","font-size":"10vw"},className="col1_1"),
                 dbc.Col(html.H5("ANGELO ZURITA"),style={"color":"white","font-size":"10vw"},className="col1_1")
             ],
             align='center',
@@ -61,74 +45,95 @@ image = dbc.Row(
     dbc.Col(
         [
             html.Img(src='assets/images/Tumores.png',className='imagen_tumor border'),
-            html.P("CENTRO INTERNACIONAL DE CÁNCER")
+            html.P("https://www.verywellhealth.com/what-does-malignant-and-benign-mean-514240")
         ],className='text-fuente'
 ),className='content-center align-content mt-4')
 
 info_radius = {
     'title': 'Radius',
-    'text': 'La media de las distancias desde el centro hasta los puntos del perímetro. '
-            'Esta variable mide el tamaño promedio del tumor. '
-            'Los tumores malignos a menudo tienen un tamaño mayor comparado con los benignos.'
+    'text': [
+        'The average of distances from the center to points on the perimeter.',
+        'This variable measures the average size of the tumor.',
+        'Malignant tumors often have a larger size compared to benign ones.'
+    ]
 }
 
 info_texture = {
     'title': 'Texture',
-    'text': 'Desviación estándar de los valores en escala de grises. '
-            'La textura mide la variación en la intensidad de los píxeles en la imagen, que puede indicar '
-            'irregularidad en la distribución de las células dentro del tumor. '
-            'Los tumores malignos suelen mostrar mayor irregularidad en la textura.'
+    'text': [
+        'Standard deviation of grayscale values.',
+        'Texture measures the variation in pixel intensity, which can indicate irregularity in the cell distribution within the tumor.',
+        'Malignant tumors usually show more irregularity in texture.'
+    ]
 }
 
 info_perimeter = {
     'title': 'Perimeter',
-    'text': 'La longitud del borde del tumor. Los tumores con bordes irregulares y más largos suelen ser '
-            'indicativos de malignidad.'
+    'text': [
+        'The length of the edge of the tumor.',
+        'Tumors with irregular and longer edges are usually indicative of malignancy.'
+    ]
 }
 
 info_area = {
     'title': 'Area',
-    'text': 'El área del tumor se calcula a partir de su contorno. '
-            'Un área mayor puede ser una señal de malignidad, aunque por sí sola no es un indicador definitivo.'
+    'text': [
+        'The area of the tumor is calculated from its contour.',
+        'A larger area can be a sign of malignancy, although by itself it is not a definitive indicator.'
+    ]
 }
 
 info_smoothness = {
     'title': 'Smoothness',
-    'text': 'Variación local en las longitudes del radio. '
-            'Esta medida evalúa qué tan suaves o irregulares son los bordes del tumor. '
-            'Los bordes más irregulares pueden ser un signo de un tumor maligno.'
+    'text': [
+        'Local variation in the lengths of the radii.',
+        'This measure assesses how smooth or irregular the edges of the tumor are.',
+        'More irregular edges can be a sign of a malignant tumor.'
+    ]
 }
 
 info_compactness = {
     'title': 'Compactness',
-    'text': 'Perímetro al cuadrado dividido por el área menos uno. '
-            'La compactidad evalúa qué tan densamente están empaquetadas las células en el tumor. '
-            'Un valor más alto sugiere un tumor más denso, lo cual es común en los tumores malignos.'
+    'text': [
+        'Perimeter squared divided by the area minus one.',
+        'Compactness assesses how densely the cells are packed in the tumor.',
+        'A higher value suggests a denser tumor, which is common in malignant tumors.'
+    ]
 }
 
 info_concavity = {
     'title': 'Concavity',
-    'text': 'Gravedad de las partes cóncavas del contorno. '
-            'La concavidad mide las indentaciones en el contorno del tumor. '
-            'Los tumores malignos a menudo presentan concavidades más pronunciadas debido a su crecimiento desigual.'
+    'text': [
+        'Severity of the concave parts of the contour.',
+        'Concavity measures the indentations in the tumor contour.',
+        'Malignant tumors often have more pronounced concavities due to their uneven growth.'
+    ]
 }
 
 info_concave_points = {
     'title': 'Concave Points',
-    'text': 'Número de partes cóncavas del contorno. Similar a la concavidad, este indicador cuenta el número de '
-            'indentaciones en el borde del tumor. Un número mayor de puntos cóncavos está asociado con la malignidad.'
+    'text': [
+        'Number of concave portions of the contour. Similar to concavity,',
+        'this indicator counts the number of indentations on the edge of the tumor.',
+        'A higher number of concave points is associated with malignancy.'
+    ]
 }
 
 info_symmetry = {
     'title': 'Symmetry',
-    'text': 'Cuán simétrica es la forma del tumor. Los tumores malignos a menudo son asimétricos.'
+    'text': [
+        'How symmetrical the shape of the tumor is.',
+        'Malignant tumors are often asymmetrical.'
+    ]
 }
 
 info_fractal_dimension = {
     'title': 'Fractal Dimension',
-    'text': 'Aproximación de la línea costera" menos uno. '
-            'Esta medida se relaciona con la complejidad del contorno del tumor, comparándola con una línea costera. '
-            'Un contorno más fractal puede indicar un tumor maligno.'
+    'text': [
+        'Approximation of the coastline minus one.',
+        'This measure relates to the complexity of the tumor contour, comparing it to a coastline.',
+        'A more fractal contour may indicate a malignant tumor.'
+    ]
 }
 
 # Lista que contiene todos los diccionarios de información
@@ -137,54 +142,380 @@ infos = [
     info_compactness, info_concavity, info_concave_points, info_symmetry,
     info_fractal_dimension
 ]
-
 def card(info):
-    return dbc.Col(
-        html.Div(
-            [
-                html.H2(info['title'], className='card-title'),
-                html.Div(info['text'], className='card-text')
-            ],
-            className='card',
-        ),
+    return dbc.AccordionItem(
+        title=info['title'],
+        children=html.Ul([html.Li(text) for text in info['text']])  # Crea un elemento Li para cada texto en la lista
     )
+
+accordion = dbc.Accordion([card(info) for info in infos])  # Esto generará una lista de AccordionItems
 
 div_interpretación = html.Div(
     [
         html.Div(
             [
                 html.Div(className='circle'),
-                html.H5('INTERPRETACIÓN',className='SanSerif text-margin'),
-                html.Div([
-                    dbc.Row([
-                        card(infos[0]),
-                        card(infos[1]),
-                        card(infos[2]),
-                    ],className='row_info'),
-                    dbc.Row([
-                        card(infos[3]),
-                        card(infos[4]),
-                        card(infos[5]),
-                    ],className='row_info'),
-                    dbc.Row([
-                        card(infos[6]),
-                        card(infos[7]),
-                        card(infos[8]),
-                    ],className='row_info'),
-                    dbc.Row([
-                        card(infos[9]),
-                    ],className='row_info2')
-                ],className='spacing')
+                html.H3('Understanding Tumor Characteristics'.upper(),className='SanSerif text-margin'),
+                html.Div(accordion, className='accordion')
             ],
             className='container contentx-center'
         ),
     ]
 )
 
+## TABLE    
+df = pd.read_csv('assets/Data/data.csv')
+df_means = df[['diagnosis', 'radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean', 
+            'concavity_mean', 'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean']]
+lista = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean','concavity_mean','concave points_mean', 'symmetry_mean', 'fractal_dimension_mean']
+df_groupby = df_means.groupby('diagnosis')[lista].mean().T
+index = df_groupby.index
+B = df_groupby.reset_index()[['B','index']].reset_index(drop=True)
+B.columns=['B','Characteristic']
+M = df_groupby.reset_index()[['index','M']].reset_index(drop=True)
+M.columns=['Characteristic','M']
+
+df_unido = pd.merge(B, M, on='Characteristic', how='inner')
+df_unido['M'] =df_unido['M'].round(3)
+df_unido['B'] =df_unido['B'].round(3)
+
+
+
+infoTable = """
+Benign (B): Represents the average measurements for benign tumors.;
+Malignant (M): Reflects the average measurements for malignant tumors.;
+The table clearly shows that across all characteristics, the values associated with malignant tumors are systematically higher in comparison to benign ones.
+"""
+epsilon = 0.0001
+benigno_maligno = html.Div([
+    html.H3('BENIGN VS MALIGNANT TUMORS'),
+    dash_table.DataTable(
+        id='table',
+        columns=[{"name": i, "id": i} for i in df_unido.columns],
+        data=df_unido.to_dict('records'),
+        style_table={'height': '350px', 'overflowY': 'auto'},
+        style_header={
+            'backgroundColor': 'white',
+            'fontWeight': 'bold'
+        },
+        style_cell={
+            'textAlign': 'center',
+            'overflow': 'hidden',
+            'textOverflow': 'ellipsis',
+            'minWidth': '300px', 'width': '180px', 'maxWidth': '180px',
+        },
+        style_data_conditional=[
+                # Resaltar cuando B es mayor que M
+                {
+                    'if': {
+                        'filter_query': '{B} >= {M}',
+                        'column_id': 'B'
+                    },
+                    'backgroundColor': 'rgb(26, 77, 128)',
+                    'color': 'white'
+                },
+                # Resaltar cuando M es mayor que B
+                {
+                    'if': {
+                        'filter_query': '{M} >= {B}',
+                        'column_id': 'M'
+                    },
+                    'backgroundColor': 'rgb(128, 26, 26)',
+                    'color': 'white'
+                },
+                # Resaltar ambas celdas cuando M y B son iguales
+                # Ajustamos las consultas para considerar el margen de error
+            ]
+    )], className='div_table'
+)
+
+descrip_tabla = html.Div([
+    html.Div(
+        [
+            html.Div(className='circle2'),
+            html.Div([
+                html.Ul([html.Li(text) for text in infoTable.split(';')])
+            ], className='div_info')
+        ],
+        className='container2 '
+        )
+],className='margin-b')
+
+row_table = html.Div([
+    benigno_maligno, descrip_tabla
+],className='Row_table')
+
+
+def scatter_df(col,medida='MM'):
+    Name_label = f" AVERAGE {col.split('_')[0].upper()} [{medida}]".upper()
+    Title = f"AVERAGE TUMOR {col.split('_')[0].upper()}"
+    fig = px.scatter(
+                                df,x=col,color='diagnosis',
+                                labels={'diagnosis':'TIPO',col:Name_label,'index':''},
+                                title=Title,width=700,color_discrete_map={'B':'rgb(26, 77, 128)','M':'rgb(128, 26, 26)'})
+    fig.for_each_trace(
+        lambda trace: trace.update(name="MALIGNANT" if trace.name == "M" else "BENIGN")
+    )
+    return fig
+
+div_figure = html.Div([
+        html.H3('Data Distribution'.upper()),
+        html.Div([
+            dcc.Graph(figure=scatter_df(lista[0]), style={'gridColumn': '1', 'gridRow': '1'}),
+            dcc.Graph(figure=scatter_df(lista[1]), style={'gridColumn': '2', 'gridRow': '1'}),
+            dcc.Graph(figure=scatter_df(lista[2]), style={'gridColumn': '1', 'gridRow': '2'}),
+            dcc.Graph(figure=scatter_df(lista[3],medida='MM2'), style={'gridColumn': '2', 'gridRow': '2'}),
+            dcc.Graph(figure=scatter_df(lista[4]), style={'gridColumn': '1', 'gridRow': '3'}),
+            dcc.Graph(figure=scatter_df(lista[5]), style={'gridColumn': '2', 'gridRow': '3'}),
+            dcc.Graph(figure=scatter_df(lista[6]), style={'gridColumn': '1', 'gridRow': '4'}),
+            dcc.Graph(figure=scatter_df(lista[7]), style={'gridColumn': '2', 'gridRow': '4'}),
+            dcc.Graph(figure=scatter_df(lista[8]), style={'gridColumn': '1', 'gridRow': '5'}),
+            dcc.Graph(figure=scatter_df(lista[9]), style={'gridColumn': '2', 'gridRow': '5'}),
+        ],style={
+        'display': 'grid',
+        'gridTemplateColumns': '1fr 1fr',  # Define dos columnas
+        'gridGap': '10px',  # Espacio entre las celdas de la grilla
+    })
+    ],className='center_fig'
+)
+
+def input_Characteristic(title, id=None):
+    if id is None:
+        id = title  # If no ID is provided, use title as the ID
+    return html.Div([
+        html.Label(title, htmlFor=id), 
+        dcc.Input(
+            id=id,  # Set a unique ID for each input for callback purposes
+            type='number',
+            step=0.00001,  
+            placeholder='Enter value',
+
+        ),
+    ], className='input_div') 
+
+
+
+nuevo =html.Div(
+                    [
+                        html.Div(
+                            [
+                                html.Div(input_Characteristic("RADIUS",'radius-input')),
+                                html.Div(input_Characteristic("TEXTURE",'texture-input')),
+                                html.Div(input_Characteristic("PERIMETER",'perimeter-input')),
+                                html.Div(input_Characteristic("AREA",'area-input')),
+                                html.Div(input_Characteristic("SMOOTHESS",'smoothess-input')),
+                            ],className='',style={'gridColumn': '1', 'gridRow': '1'}),
+                        html.Div([
+                                html.Div(input_Characteristic("COMPACTNESS",'compactness-input')),
+                                html.Div(input_Characteristic("CONCAVITY",'concavity-input')),
+                                html.Div(input_Characteristic("CONCAVE POINTS","concavePoint-input")),
+                                html.Div(input_Characteristic("SYMMTRY",'symetry-input')),
+                                html.Div(input_Characteristic("FRACTAL DIMENSION","fractalDimension-input")),
+                            ],className='', style={'gridColumn': '2', 'gridRow': '1'})
+                    ],
+                    style={
+                            'display': 'grid',
+                            'gridTemplateColumns': '1fr 1fr', 
+                            'gridGap': '50px',  
+                            'gridColumn': '1', 'gridRow': '1'
+                        }
+                )
+
+model_path = 'assets/models/ModelMean.sav'
+with open(model_path, 'rb') as model_file:
+    gbc = pickle.load(model_file)
+
+featureImportance_names = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 
+                'smoothness_mean', 'compactness_mean', 'concavity_mean', 
+                'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean']
+
+importances = gbc.feature_importances_
+
+df_feature_importances = pd.DataFrame({'Feature': featureImportance_names, 'Importance': importances})
+df_feature_importances = df_feature_importances.sort_values('Importance', ascending=False)
+
+feature_importances = px.bar(df_feature_importances, 
+                x='Importance', 
+                y='Feature', 
+                title='Feature Importances',
+                text_auto = True,
+                orientation='h',
+                color='Feature',
+                color_discrete_sequence = px.colors.qualitative.Pastel,
+                width=1000
+            )
+feature_importances.update_layout(yaxis={'categoryorder':'total ascending'})
+
+div_modelo = html.Div(
+    [
+        html.Div(
+            [
+                html.Div(className='circle'),
+                html.Div([
+                        html.Div(
+                        [
+                            html.Div(className='circle_nota', id='circle_nota'),
+                            html.Div(html.P('Values in millimeters only the area in square millimeters', className='center_text'),
+                                    className='circle_notaTexto', id='circle_notaTexto'),
+                        ],
+                        className='circle-hover'
+                    ),
+                ],className='circle_div'),
+                html.H3('MODEL',className='SanSerif text-margin'),
+                html.Div([
+                    dcc.Graph(figure=feature_importances)
+                ]),
+                html.Div([
+                    nuevo,
+                    html.Div(id='contenido_nuevo',className='div_probabilidad',style={'margin-top':'25px'})
+                ],style={
+                            'display': 'grid',
+                            'gridTemplateColumns': '1fr 1fr', 
+                            'gridGap': '50px',  
+                            'gridColumn': '1', 'gridRow': '1',
+                            'margin-top':'50px'
+                        }),
+                html.Div([
+                    dbc.Button('PREDICT',id='button-predict',className='button-pred'),
+                    html.Div([
+                        html.Label('Predetermined values'.upper()),
+                        html.Div([
+                            dcc.Dropdown(
+                                ['MALIGNANT','BENIGN','USER'],
+                                'USER',
+                                id='dropdown-pred'
+                            )
+                        ])
+                    ],className='predeterminedDiv')
+                ],className='div_button')
+            ],
+            className='container contentx-center'
+        ),
+    ],className='margin-10'
+)
+
+model_scalerpath = 'assets/models/scaler_ModelMean.sav'
+with open(model_scalerpath, 'rb') as model_file:
+    scaler = pickle.load(model_file)
+
+@callback(
+    Output('contenido_nuevo', 'children'),
+    [
+    State('radius-input', 'value'),
+    State('texture-input', 'value'),
+    State('perimeter-input', 'value'),
+    State('area-input', 'value'),
+    State('smoothess-input', 'value'),
+    State('compactness-input', 'value'),
+    State('concavity-input', 'value'),
+    State('concavePoint-input', 'value'),
+    State('symetry-input', 'value'),
+    State('fractalDimension-input', 'value'),
+    ],
+    Input('button-predict', 'n_clicks')
+)
+def update_output(radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension, n_clicks):
+    if n_clicks != None and  n_clicks > 0:
+        lista_elemento = [radius or 0.0, texture or 0.0, perimeter or 0.0, area or 0.0, 
+                        smoothness or 0.0, compactness or 0.0, concavity or 0.0, 
+                        concave_points or 0.0, symmetry or 0.0, fractal_dimension or 0.0]
+        new_data = pd.DataFrame([lista_elemento], columns=featureImportance_names)
+        new_data.loc[0] = lista_elemento
+        X_train = scaler.transform(new_data)
+        y_proba = gbc.predict_proba(X_train)
+        prob_maligna = np.round(y_proba[0, 1],3)
+        prob_benigna = np.round(y_proba[0, 0],3)
+        data = pd.DataFrame({
+            'Categoria': ['BENIGN', 'MALIGNANT'],
+            'Probabilidad': [prob_benigna, prob_maligna]
+        })
+        import plotly.express as px
+        # Creando el gráfico de pastel
+        fig_probabilidad = px.pie(data, values='Probabilidad', names='Categoria', title='PREDICTION',color='Categoria',
+                                color_discrete_map={'BENIGN':'rgb(26, 77, 128)','MALIGNANT':'rgb(128, 26, 26)'})
+        return  html.Div([
+                    dcc.Graph(figure=fig_probabilidad)
+                ],style={
+                            'gridColumn': '2', 'gridRow': '1'
+                        }),
+    return html.Div()
+
+from dash import html, dcc, callback, Output, State, Input
+
+@callback(
+    [
+        Output('radius-input', 'value',allow_duplicate=True),
+        Output('texture-input', 'value',allow_duplicate=True),
+        Output('perimeter-input', 'value',allow_duplicate=True),
+        Output('area-input', 'value',allow_duplicate=True),
+        Output('smoothess-input', 'value',allow_duplicate=True),
+        Output('compactness-input', 'value',allow_duplicate=True),
+        Output('concavity-input', 'value',allow_duplicate=True),
+        Output('concavePoint-input', 'value',allow_duplicate=True),
+        Output('symetry-input', 'value',allow_duplicate=True),
+        Output('fractalDimension-input', 'value',allow_duplicate=True),
+    ],
+    Input('button-predict', 'n_clicks'),
+    [
+        State('radius-input', 'value'),
+        State('texture-input', 'value'),
+        State('perimeter-input', 'value'),
+        State('area-input', 'value'),
+        State('smoothess-input', 'value'),
+        State('compactness-input', 'value'),
+        State('concavity-input', 'value'),
+        State('concavePoint-input', 'value'),
+        State('symetry-input', 'value'),
+        State('fractalDimension-input', 'value'),
+    ],
+    prevent_initial_call=True
+)
+def update_input_values(n_clicks, radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension):
+    if n_clicks != None and n_clicks > 0:
+        inputs = [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension]
+        return [0.00 if v == None else v for v in inputs]
+    return [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension]
+
+@callback(
+    [
+        Output('radius-input', 'value'),
+        Output('texture-input', 'value'),
+        Output('perimeter-input', 'value'),
+        Output('area-input', 'value'),
+        Output('smoothess-input', 'value'),
+        Output('compactness-input', 'value'),
+        Output('concavity-input', 'value'),
+        Output('concavePoint-input', 'value'),
+        Output('symetry-input', 'value'),
+        Output('fractalDimension-input', 'value'),
+    ],
+    Input('dropdown-pred', 'value'),
+    [
+        State('radius-input', 'value'),
+        State('texture-input', 'value'),
+        State('perimeter-input', 'value'),
+        State('area-input', 'value'),
+        State('smoothess-input', 'value'),
+        State('compactness-input', 'value'),
+        State('concavity-input', 'value'),
+        State('concavePoint-input', 'value'),
+        State('symetry-input', 'value'),
+        State('fractalDimension-input', 'value'),
+    ]
+)
+def update_input_values(value, radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension):
+    if value != 'USER' and value != None:
+        inputs = []
+        if(value == 'MALIGNANT'):
+            inputs = df_unido['M'].to_list()
+        else:
+            inputs = df_unido['B'].to_list()
+        return inputs
+    return [None]*10
 
 
 app.layout = html.Div([
-    navbar2,image,div_interpretación,
+    navbar2,Titulo,image,div_interpretación,row_table,div_figure,div_modelo
 ],className='body all')
 
 
