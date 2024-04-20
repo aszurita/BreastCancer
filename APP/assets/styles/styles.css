@@ -337,3 +337,22 @@
     margin-top: 20%;
     font-size: small;
 }
+
+/* Estilos para el dropdown en sí */
+.Select-control {
+    background-color: #f2f2f2;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+}
+
+/* Estilos para las opciones del dropdown */
+.VirtualizedSelectOption {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* Estilos para la opción seleccionada */
+.VirtualizedSelectFocusedOption {
+    background-color: rgb(26, 77, 128);
+    color: #ffffff;
+}

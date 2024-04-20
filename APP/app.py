@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler
 import numpy as np
 import os
 import warnings
+import random as rd
 
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]  
@@ -380,11 +381,17 @@ div_modelo = html.Div(
                     html.Div([
                         html.Label('Predetermined values'.upper()),
                         html.Div([
-                            dcc.Dropdown(
-                                ['MALIGNANT','BENIGN','USER'],
-                                'USER',
-                                id='dropdown-pred'
-                            )
+                                    dcc.Dropdown(
+                                        options=[
+                                            {'label': 'MALIGNANT', 'value': 'MALIGNANT'},
+                                            {'label': 'BENIGN', 'value': 'BENIGN'},
+                                            {'label': 'USER', 'value': 'USER'},
+                                            {'label': 'RANDOM', 'value': 'RANDOM'}
+                                        ],
+                                        value='USER',
+                                        id='dropdown-pred',
+                                        className='dropdown'  # Esta es la clase que definiste en tu archivo CSS.
+                                    )
                         ])
                     ],className='predeterminedDiv')
                 ],className='div_button')
@@ -399,7 +406,7 @@ with open(model_scalerpath, 'rb') as model_file:
     scaler = pickle.load(model_file)
 
 @callback(
-    Output('contenido_nuevo', 'children'),
+    Output('contenido_nuevo', 'children',allow_duplicate=True),
     [
     State('radius-input', 'value'),
     State('texture-input', 'value'),
@@ -412,7 +419,8 @@ with open(model_scalerpath, 'rb') as model_file:
     State('symetry-input', 'value'),
     State('fractalDimension-input', 'value'),
     ],
-    Input('button-predict', 'n_clicks')
+    Input('button-predict', 'n_clicks'),
+    prevent_initial_call=True
 )
 def update_output(radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension, n_clicks):
     if n_clicks != None and  n_clicks > 0:
@@ -455,6 +463,7 @@ from dash import html, dcc, callback, Output, State, Input
         Output('symetry-input', 'value',allow_duplicate=True),
         Output('fractalDimension-input', 'value',allow_duplicate=True),
     ],
+
     Input('button-predict', 'n_clicks'),
     [
         State('radius-input', 'value'),
@@ -474,8 +483,9 @@ def update_input_values(n_clicks, radius, texture, perimeter, area, smoothness, 
     if n_clicks != None and n_clicks > 0:
         inputs = [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension]
         return [0.00 if v == None else v for v in inputs]
-    return [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension]
+    return [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension, html.Div()]
 
+df_random = pd.read_csv('assets/Data/RandomValuesOriginal.csv')
 @callback(
     [
         Output('radius-input', 'value'),
@@ -488,30 +498,27 @@ def update_input_values(n_clicks, radius, texture, perimeter, area, smoothness, 
         Output('concavePoint-input', 'value'),
         Output('symetry-input', 'value'),
         Output('fractalDimension-input', 'value'),
+        Output('contenido_nuevo', 'children'),
     ],
     Input('dropdown-pred', 'value'),
-    [
-        State('radius-input', 'value'),
-        State('texture-input', 'value'),
-        State('perimeter-input', 'value'),
-        State('area-input', 'value'),
-        State('smoothess-input', 'value'),
-        State('compactness-input', 'value'),
-        State('concavity-input', 'value'),
-        State('concavePoint-input', 'value'),
-        State('symetry-input', 'value'),
-        State('fractalDimension-input', 'value'),
-    ]
 )
-def update_input_values(value, radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension):
-    if value != 'USER' and value != None:
+def update_input_values(value):
+    if value == 'RANDOM' and value != None:
+        id_random = rd.randint(0,len(df_random))
+        lista_return = df_random.loc[id_random].to_list()[0:10]
+        lista_return.append(html.Div())
+        return lista_return
+    elif value != 'USER' and value != None:
         inputs = []
         if(value == 'MALIGNANT'):
             inputs = df_unido['M'].to_list()
         else:
             inputs = df_unido['B'].to_list()
+        inputs.append(html.Div())
         return inputs
-    return [None]*10
+    lista_error = ([None]*10)
+    lista_error.append(html.Div())
+    return lista_error
 
 
 app.layout = html.Div([
