@@ -356,3 +356,39 @@
     background-color: rgb(26, 77, 128);
     color: #ffffff;
 }
+.container-howWork{
+    display: flex;
+    justify-content: space-around;
+}
+.col-iteration{
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+.div-work{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+.treeImage{
+    width: 1200px;
+    height: 500px;
+    margin-bottom: 100px;
+    margin-top: 20px;
+}
+.div_iteration{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 300px;
+}
+.input-iteration{
+    width: 200px;
+}
+.mb-20{
+    margin-bottom: 30px;
+}

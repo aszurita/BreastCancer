@@ -3,16 +3,24 @@ import dash_bootstrap_components as dbc
 from dash import Dash, dcc, html,callback,dash_table
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
+import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
 import pickle
 import plotly.express as px
 import plotly.graph_objects as go
 from sklearn.preprocessing import StandardScaler
-import numpy as np
+from scipy.special import expit 
+from sklearn.tree import plot_tree
 import os
 import warnings
 import random as rd
 
+from sklearn import tree
+import graphviz
+from IPython.display import Image
+import pydotplus
+import base64
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]  
 warnings.filterwarnings('ignore')
@@ -187,7 +195,6 @@ Benign (B): Represents the average measurements for benign tumors.;
 Malignant (M): Reflects the average measurements for malignant tumors.;
 The table clearly shows that across all characteristics, the values associated with malignant tumors are systematically higher in comparison to benign ones.
 """
-epsilon = 0.0001
 benigno_maligno = html.Div([
     html.H3('BENIGN VS MALIGNANT TUMORS'),
     dash_table.DataTable(
@@ -290,7 +297,6 @@ def input_Characteristic(title, id=None):
             type='number',
             step=0.00001,  
             placeholder='Enter value',
-
         ),
     ], className='input_div') 
 
@@ -334,7 +340,7 @@ importances = gbc.feature_importances_
 
 df_feature_importances = pd.DataFrame({'Feature': featureImportance_names, 'Importance': importances})
 df_feature_importances = df_feature_importances.sort_values('Importance', ascending=False)
-
+df_feature_importances = df_feature_importances.round(3)
 feature_importances = px.bar(df_feature_importances, 
                 x='Importance', 
                 y='Feature', 
@@ -394,11 +400,12 @@ div_modelo = html.Div(
                                     )
                         ])
                     ],className='predeterminedDiv')
-                ],className='div_button')
+                ],className='div_button'),
+                html.Div(id='div_howWork',className='div-work')
             ],
             className='container contentx-center'
         ),
-    ],className='margin-10'
+    ],className='margin-10 mb-20'
 )
 
 model_scalerpath = 'assets/models/scaler_ModelMean.sav'
@@ -406,18 +413,21 @@ with open(model_scalerpath, 'rb') as model_file:
     scaler = pickle.load(model_file)
 
 @callback(
-    Output('contenido_nuevo', 'children',allow_duplicate=True),
+    [   
+        Output('contenido_nuevo', 'children',allow_duplicate=True),
+        Output('div_howWork', 'children',allow_duplicate=True),
+    ],
     [
-    State('radius-input', 'value'),
-    State('texture-input', 'value'),
-    State('perimeter-input', 'value'),
-    State('area-input', 'value'),
-    State('smoothess-input', 'value'),
-    State('compactness-input', 'value'),
-    State('concavity-input', 'value'),
-    State('concavePoint-input', 'value'),
-    State('symetry-input', 'value'),
-    State('fractalDimension-input', 'value'),
+        State('radius-input', 'value'),
+        State('texture-input', 'value'),
+        State('perimeter-input', 'value'),
+        State('area-input', 'value'),
+        State('smoothess-input', 'value'),
+        State('compactness-input', 'value'),
+        State('concavity-input', 'value'),
+        State('concavePoint-input', 'value'),
+        State('symetry-input', 'value'),
+        State('fractalDimension-input', 'value'),
     ],
     Input('button-predict', 'n_clicks'),
     prevent_initial_call=True
@@ -441,14 +451,82 @@ def update_output(radius, texture, perimeter, area, smoothness, compactness, con
         # Creando el gráfico de pastel
         fig_probabilidad = px.pie(data, values='Probabilidad', names='Categoria', title='PREDICTION',color='Categoria',
                                 color_discrete_map={'BENIGN':'rgb(26, 77, 128)','MALIGNANT':'rgb(128, 26, 26)'})
-        return  html.Div([
+        
+        html1 =  html.Div([
                     dcc.Graph(figure=fig_probabilidad)
                 ],style={
                             'gridColumn': '2', 'gridRow': '1'
                         }),
-    return html.Div()
+        staged_decision_scores = [score for score in gbc.staged_decision_function(X_train)]
+        staged_probabilities = [expit(score) for score in staged_decision_scores]
+        df_probabilities = pd.DataFrame(columns=['BENIGN','MALIGNANT'])
+        df_probabilities['MALIGNANT'] = [value[0][0] for value in staged_probabilities]
+        df_probabilities['BENIGN'] = 1 - df_probabilities['MALIGNANT']
+        df_probabilities.loc[180] = [prob_benigna,prob_maligna]
+        df_probabilities = df_probabilities.round(3)
+        df_probabilities_iter = df_probabilities.reset_index()
+        df_probabilities_iter.columns = ['ITERATION','BENIGN','MALIGNANT']
+        df_probabilities_iter = df_probabilities_iter.melt(id_vars='ITERATION', value_vars=['BENIGN', 'MALIGNANT'], var_name='TYPE', value_name='PROBABILITY')
+        fig_probabilty = px.line(df_probabilities_iter, x='ITERATION', y='PROBABILITY',color='TYPE', markers=True,
+                    color_discrete_map={'BENIGN':'rgb(26, 77, 128)','MALIGNANT':'rgb(128, 26, 26)'},width=1000,
+                    hover_name='TYPE', hover_data={'TYPE':False,'ITERATION': True})
+        # Mejorar la presentación del gráfico
+        fig_probabilty.update_layout(
+            title='Probability Evolution for BENIGN and MALIGNANT'.upper(),
+            xaxis_title='Iteration'.upper(),
+            yaxis_title='Probability'.upper(),
+            legend_title='TYPE'
+        )
+        html2 = [
+                    html.Div([
+                        html.H2("How does this work?".upper())
+                    ],style={'margin-top':'20px'}),
+                    html.Div([
+                        html.Div(dcc.Graph(figure=fig_probabilty)),
+                        html.Div([
+                            html.Div([
+                                html.Label('ITERATION NUMBER',htmlFor='iteration',className='input-number'),
+                                dcc.Input(
+                                    id='iteration', 
+                                    type='number',
+                                    min=1,  
+                                    max=180, 
+                                    step=1,  
+                                    placeholder='Iteration number',className='input-iteration'
+                                )
+                            ],className='col-iteration'),
+                            html.Div([
+                                dbc.Button('GENERATE TREE',id='button-iteration',className='button-pred'),
+                            ])
+                        ],className='div_iteration')
+                    ],className='div-work'),
+                    html.Div(id='tree-iterator'),
+                ]
+        return html1,html2
+    return html.Div(),html.Div()
 
-from dash import html, dcc, callback, Output, State, Input
+@callback(
+    Output('tree-iterator','children'),
+    Input('button-iteration','n_clicks'),
+    State('iteration','value')
+)
+def grapg_iterationTree(n_clicks,value):
+    tree_image=html.Div()
+    if n_clicks != None and n_clicks > 0 and value != None:
+        columns = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean',
+                    'concavity_mean', 'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean']
+        
+        dot_data = tree.export_graphviz(gbc.estimators_[value-1, 0], out_file=None, 
+                                feature_names=columns,  
+                                filled=True)
+        graph = graphviz.Source(dot_data, format="png") 
+        graph.render("decision_tree")
+        encoded_image = base64.b64encode(open('decision_tree.png', 'rb').read())
+        tree_image = html.Div([
+                html.H2(f"TREE # {value}"),
+                html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()),className='treeImage')
+        ])
+    return tree_image
 
 @callback(
     [
@@ -463,7 +541,6 @@ from dash import html, dcc, callback, Output, State, Input
         Output('symetry-input', 'value',allow_duplicate=True),
         Output('fractalDimension-input', 'value',allow_duplicate=True),
     ],
-
     Input('button-predict', 'n_clicks'),
     [
         State('radius-input', 'value'),
@@ -483,7 +560,7 @@ def update_input_values(n_clicks, radius, texture, perimeter, area, smoothness, 
     if n_clicks != None and n_clicks > 0:
         inputs = [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension]
         return [0.00 if v == None else v for v in inputs]
-    return [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension, html.Div()]
+    return [radius, texture, perimeter, area, smoothness, compactness, concavity, concave_points, symmetry, fractal_dimension]
 
 df_random = pd.read_csv('assets/Data/RandomValuesOriginal.csv')
 @callback(
@@ -499,6 +576,7 @@ df_random = pd.read_csv('assets/Data/RandomValuesOriginal.csv')
         Output('symetry-input', 'value'),
         Output('fractalDimension-input', 'value'),
         Output('contenido_nuevo', 'children'),
+        Output('div_howWork', 'children'),
     ],
     Input('dropdown-pred', 'value'),
 )
@@ -506,6 +584,7 @@ def update_input_values(value):
     if value == 'RANDOM' and value != None:
         id_random = rd.randint(0,len(df_random))
         lista_return = df_random.loc[id_random].to_list()[0:10]
+        lista_return.append(html.Div())
         lista_return.append(html.Div())
         return lista_return
     elif value != 'USER' and value != None:
@@ -515,8 +594,10 @@ def update_input_values(value):
         else:
             inputs = df_unido['B'].to_list()
         inputs.append(html.Div())
+        inputs.append(html.Div())
         return inputs
     lista_error = ([None]*10)
+    lista_error.append(html.Div())
     lista_error.append(html.Div())
     return lista_error
 
