@@ -1,0 +1,12 @@
+dash
+dash-bootstrap-components
+numpy
+matplotlib
+pandas
+scikit-learn==1.2.2
+scipy
+plotly
+graphviz
+pydotplus
+IPython
+pickle-mixin
