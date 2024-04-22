@@ -1,17 +1,19 @@
-*{
+* {
     font-family: sans-serif;
     user-select: none;
 }
-.body{
+
+.body {
     background-color: rgb(233, 212, 198);
     width: 100%;
     height: 100%;
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-.Titulo{
+
+.Titulo {
     color: #f2e6e6;
     font-size: 40px;
     font-weight: bold;
@@ -19,10 +21,12 @@
     justify-content: center;
     align-items: center;
 }
-.margin-left{
+
+.margin-left {
     margin-left: 15vw;
 }
-.row_header{
+
+.row_header {
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
@@ -30,22 +34,24 @@
     padding-right: -3%;
     padding-left: -3%;
 }
-.Header{
+
+.Header {
     background-color: rgb(26, 77, 128);
     color: white;
     height: auto;
-    width :100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     transition: all ease.8s;
     position: relative;
-    z-index:97;
+    z-index: 97;
     overflow: hidden;
 
 }
-.col1_1{
+
+.col1_1 {
     margin-left: 10vw;
     margin-right: 10vw;
     margin-top: 1vw;
@@ -55,46 +61,52 @@
     justify-content: center;
     align-items: center;
 }
-.centrado h6{
+
+.centrado h6 {
     text-align: center;
     justify-content: center;
     align-items: center;
 }
 
-.content-center{
+.content-center {
     display: flex;
     align-items: center;
     place-content: center;
 }
 
-.contentx-center{
+.contentx-center {
     display: flex;
     align-items: center;
 }
-.align-content{
+
+.align-content {
     text-align: center;
 }
 
-.imagen_tumor{
+.imagen_tumor {
     height: 500px;
     width: 700px;
 }
 
-.text-fuente{
+.text-fuente {
     font-size: 15px;
-    font-family:sans-serif;
+    font-family: sans-serif;
 }
 
-.mt-4{
+.mt-4 {
     margin-top: 4rem;
 }
-.border{
+
+.border {
     border-radius: 50px;
 }
+
 .container {
     position: relative;
-    width: 1500px; /* O el ancho que desees */
-    background-color:rgb(26, 77, 128); /* Azul */
+    width: 1500px;
+    /* O el ancho que desees */
+    background-color: rgb(26, 77, 128);
+    /* Azul */
     margin-bottom: 5vh;
     margin-top: 5vh;
     flex-direction: column;
@@ -105,21 +117,21 @@
 .circle {
     background-image: url('https://static.vecteezy.com/system/resources/thumbnails/003/428/270/small_2x/businessman-explain-pose-character-design-free-vector.jpg');
     position: absolute;
-    top: -40px; /* Ajusta la posición como necesites */
-    left: -30px; /* Ajusta la posición como necesites */
-    width: 150px; /* O el tamaño del círculo que desees */
-    height: 150px; /* O el tamaño del círculo que desees */
-    border-radius: 50%; /* Esto hace que sea un círculo */
+    top: -40px;
+    left: -30px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
     background-size: cover;
     background-position: center;
 }
 
-.SanSerif{
-    font-family:sans-serif;
+.SanSerif {
+    font-family: sans-serif;
 }
 
 
-.text-margin{
+.text-margin {
     margin-top: 20px;
 }
 
@@ -136,22 +148,22 @@
 }
 
 .card-text {
-    font-family:sans-serif;
+    font-family: sans-serif;
     padding: 5px;
     width: 370px;
     text-align: justify;
 }
 
-.row_info{
-    display:flex;
-    justify-content:space-around;
+.row_info {
+    display: flex;
+    justify-content: space-around;
     align-items: center;
     margin-top: 20px;
     margin-bottom: 20px;
 }
 
-.row_info2{
-    display:flex;
+.row_info2 {
+    display: flex;
     justify-content: center;
     align-content: center;
     margin-top: 20px;
@@ -159,29 +171,31 @@
     padding: 0;
 }
 
-.accordion{
+.accordion {
     margin-top: 20px;
     width: 1100px;
     padding-bottom: 30px;
 }
-.row{
+
+.row {
     display: flex;
     flex-direction: row;
 }
-.div_table{
+
+.div_table {
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     width: 900px;
     height: 500px;
     flex-direction: column;
     gap: 10px;
 }
 
-.container2{
+.container2 {
     position: relative;
-    width: 400px; /* O el ancho que desees */
-    background-color: #ffffff; /* Azul */
+    width: 400px;
+    background-color: #ffffff;
     flex-direction: column;
     gap: 10px;
     display: flex;
@@ -189,30 +203,34 @@
     align-items: center;
     border-radius: 10%;
 }
+
 .circle2 {
     background-image: url('https://static.vecteezy.com/system/resources/thumbnails/003/428/270/small_2x/businessman-explain-pose-character-design-free-vector.jpg');
     position: absolute;
-    top: -20px; /* Ajusta la posición como necesites */
-    left: -15px; /* Ajusta la posición como necesites */
-    width: 70px; /* O el tamaño del círculo que desees */
-    height: 70px; /* O el tamaño del círculo que desees */
+    top: -20px;
+    left: -15px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background-size: cover;
     background-position: center;
 }
-.div_info{
+
+.div_info {
     text-align: justify;
     width: 80%;
     padding: 15px;
 }
-.Row_table{
+
+.Row_table {
     display: flex;
     flex-direction: row;
     width: 100%;
     justify-content: space-around;
     align-items: center;
 }
-.div_contenedor{
+
+.div_contenedor {
     margin: 0;
     padding: 0;
     display: flex;
@@ -223,44 +241,47 @@
 }
 
 
-.center_fig{
+.center_fig {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap:20px
+    gap: 20px
 }
-.margin-10{
+
+.margin-10 {
     margin-top: 50px;
 }
 
-.input_div{
+.input_div {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content:center;
+    justify-content: center;
     height: 100px;
     width: 200px;
     font-size: medium;
     gap: 20px;
 }
-.input_charac{
+
+.input_charac {
     width: 80%;
     border-radius: 20%;
     justify-content: center;
     text-align: center;
 }
-.div_button{
+
+.div_button {
     display: flex;
-    justify-content:space-around;
-    align-items:center;
+    justify-content: space-around;
+    align-items: center;
     width: 100%;
     margin-top: 60px;
     margin-bottom: 20px;
 }
 
-.button-pred{
-    background-color:rgb(128, 26, 26) ;
+.button-pred {
+    background-color: rgb(128, 26, 26);
     text-align: center;
     font-size: medium;
     font-weight: 500;
@@ -269,26 +290,30 @@
     border-color: rgb(128, 26, 26);
     padding: 10px 50px;
 }
-.button-pred:hover{
-    background:rgb(124, 68, 68);
+
+.button-pred:hover {
+    background: rgb(124, 68, 68);
     border-radius: 25%;
     border-color: rgb(128, 26, 26);
 }
-.margintTitle{
+
+.margintTitle {
     margin-top: 20px;
 }
-.predeterminedDiv{
+
+.predeterminedDiv {
     background-color: rgb(128, 26, 26);
     padding: 30px;
     border-radius: 25%;
     border-color: rgb(128, 26, 26);
 }
-.circle_div{
+
+.circle_div {
     position: absolute;
-    top: 45%; /* Ajusta la posición como necesites */
-    left: 20px; /* Ajusta la posición como necesites */
-    width: 130px; /* O el tamaño del círculo que desees */
-    height: 130px; /* O el tamaño del círculo que desees */
+    top: 45%;
+    left: 20px;
+    width: 130px;
+    height: 130px;
     border-radius: 10%;
 }
 
@@ -298,7 +323,9 @@
     height: 130px;
     perspective: 1000px;
 }
-.circle_nota, .circle_notaTexto {
+
+.circle_nota,
+.circle_notaTexto {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -310,30 +337,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
 .circle_nota {
-  background-image: url('../images/idea.png');
+    background-image: url('../images/idea.png');
     background-color: #f2e6e6;
     transform: rotateY(0deg);
-  }
-  
-  .circle_notaTexto {
+}
+
+.circle_notaTexto {
     background-color: #f2e6e6;
     color: black;
     text-align: center;
     transform: rotateY(180deg);
-  }
-  
-  .circle-hover:hover .circle_nota {
+}
+
+.circle-hover:hover .circle_nota {
     transform: rotateY(-180deg);
-  }
-  
-  .circle-hover:hover .circle_notaTexto {
+}
+
+.circle-hover:hover .circle_notaTexto {
     transform: rotateY(0deg);
-  }
-  
-.center_text{
+}
+
+.center_text {
     margin-top: 20%;
     font-size: small;
 }
@@ -356,17 +383,20 @@
     background-color: rgb(26, 77, 128);
     color: #ffffff;
 }
-.container-howWork{
+
+.container-howWork {
     display: flex;
     justify-content: space-around;
 }
-.col-iteration{
+
+.col-iteration {
     display: flex;
     justify-content: center;
     align-content: center;
     flex-direction: column;
 }
-.div-work{
+
+.div-work {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -374,21 +404,162 @@
     text-align: center;
     gap: 20px;
 }
-.treeImage{
+
+.treeImage {
     width: 1200px;
     height: 500px;
     margin-bottom: 100px;
     margin-top: 20px;
 }
-.div_iteration{
+
+.div_iteration {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 300px;
 }
-.input-iteration{
+
+.input-iteration {
     width: 200px;
 }
-.mb-20{
+
+.mb-20 {
     margin-bottom: 30px;
+}
+
+.row_links {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(26, 77, 128);
+    width: 100%;
+    font-size: large;
+    padding: 20px 10px
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+}
+
+.link:hover {
+    color: rgb(16, 30, 44);
+    border-bottom: 5px solid rgb(78, 108, 138);
+}
+
+.div_know {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.subtitle-div-know {
+    display: flex;
+    justify-content: start;
+}
+
+.card_row {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.text {
+    font-size: 20px;
+}
+.fuentes_div{
+    width: 100%;
+    display: flex;
+    justify-content: start;
+}
+.center-fuentes {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(26, 77, 128);
+    width: 1500px;
+}
+
+.title-fuente{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.container_botones{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    font-weight: bold;
+    gap: 50px;
+}
+
+.col-iguales{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.buttons{
+    width: 100px;
+    border-radius: 25%;
+    background-color:rgb(78, 108, 138);
+}
+.center-divstadistics{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
+    margin-top: 100px;
+    gap:50px
+}
+
+.columnscenter{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: rgb(100, 133, 165);
+    width: 200px;
+    height: 300px;
+    border-radius: 25%;
+    gap : 0px
+}
+.title{
+    font-size: larger;
+    font-weight: bold;
+    margin-top: 40px;
+    color:black
+}
+.Number{
+    font-size: 80px;
+    font-weight: bold;
+    color: white;
+}
+.msg{
+    font-size: larger;
+    margin-bottom: 40px;
+    font-weight: bold;
+    color:black
+}
+.contenidoGrafico{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.margin-left{
+    margin-left: 50px;
+}
+.spacing-buttons{
+    gap:40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

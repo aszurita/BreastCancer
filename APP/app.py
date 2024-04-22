@@ -50,11 +50,148 @@ navbar2 = dbc.Row(
             className="Header g-0"
 ) 
 
+links = html.Div([
+    html.A('STATISTICS', href='#seccion1',className='link'),  
+    html.A('FEATURES', href='#features',className='link'),
+    html.A('MODEL', href='#modelo',className='link')
+], className='row_links')
+
+
+gender_info = {'FEMALE':['1 in 8','assets/images/female.png'],'MALE':['1 in 1000','assets/images/male.png']}
+def cardInfo(gender):
+    card = html.Div(className='card', children=[
+        html.Img(src=gender_info[gender][1], alt='gender',className='image_card'),
+        html.Div(className='card__content', children=[
+            html.P(gender, className='card__title'),
+            html.P(gender_info[gender][0], className='card__description')
+        ])
+    ])
+    return card
+
+div_know = html.Div([
+    html.H1('Did You Know?'.upper(),className='title-fuente'),
+    html.Div(
+        [    
+            html.H3('The average risk of being diagnosed with breast cancer at some point in their lives is',className='text'),
+        ],className='subtitle-div-know'),
+    html.Div([
+                html.Div([cardInfo('FEMALE')]),
+                html.Div([cardInfo('MALE')]),
+            ],className='card_row'),
+],className='div_know')
+
+buttons = html.Div([
+    html.Div([
+        html.P('INCIDENCE'),
+        html.Div([
+            dbc.Button('BothSex',id='inci-bothsex',className='buttons'),
+            dbc.Button('Female',id='inci-female',className='buttons')
+        ],className='spacing-buttons')
+    ],className='col-iguales'),
+    html.Div([
+        html.P('MORTALITY'),
+        html.Div([
+            dbc.Button('BothSex',id='mort-bothsex',className='buttons'),
+            dbc.Button('Female',id='mort-female',className='buttons')
+        ],className='spacing-buttons')
+    ],className='col-iguales')
+],className='container_botones')
+
+
+
+
+columns  = ['Label','Total']
+incidense_both2022 = pd.read_csv('assets/Data/Data_BreastCancer/incidences2022_bothSex.csv')[columns]
+incidense_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/incidense2022_females.csv')[columns]
+mort_both2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_2022_bothSex.csv')[columns]
+mort_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_2022_females.csv')[columns]
+
+def initial_figure():
+    df = incidense_both2022
+    y_title = 'INCIDENSE'
+    title = 'INCIDENSE - BOTH SEX'
+    top10 = df.sort_values('Total', ascending=False).head(10)
+    colors = px.colors.qualitative.Pastel
+    color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
+    color_map['Breast'] = 'rgb(78, 108, 138)'
+    fig = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
+                color='Label', title=title, color_discrete_map=color_map)
+    fig.update_traces(showlegend=False)
+    return fig
+
+def CardPosition(type,numero):
+    msg = ''
+    if type=='INCIDENSE':
+        msg = 'With the most incidents'
+    else : 
+        msg = 'Deadliest'
+    return html.Div([
+        html.P('WORLD',className='title'),
+        html.P(numero,className='Number'),
+        html.P(msg,className='msg')
+    ],className='columnscenter margin-left')
+
+div_stadistics = html.Div([
+    html.Div(className='circle'),
+    html.H3('STATISTICS IN THE WORLD'),
+    buttons,
+    html.Div([dcc.Graph(id='grafico', figure=initial_figure()),
+            CardPosition('INCIDENSE',2)]
+    ,id='contenidoGrafico',className='contenidoGrafico')
+],className='center-divstadistics container')
+
+
+@app.callback(
+    Output('contenidoGrafico', 'children'),
+    [
+        Input('inci-bothsex', 'n_clicks'),
+        Input('inci-female', 'n_clicks'),
+        Input('mort-bothsex', 'n_clicks'),
+        Input('mort-female', 'n_clicks'),
+    ],
+    prevent_initial_call=True
+)
+def graphInicial(incibothsex, incifemale, mortbothsex, mortfemale):
+    ctx = dash.callback_context
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    df = ''
+    y_title = ''
+    title = ''
+    number = 2
+    if button_id == 'inci-female':
+        df = incidense_female2022
+        y_title = 'INCIDENSE'
+        title = 'INCIDENSE - FEMALE'
+        number = 1
+    elif button_id == 'mort-bothsex':
+        df = mort_both2022
+        y_title = 'MORTALITY'
+        title = 'MORTALITY - BOTH SEX'
+        number = 4
+    elif button_id == 'mort-female':
+        df = mort_female2022
+        y_title = 'MORTALITY'
+        title = 'MORTALITY - FEMALE'
+        number = 1
+    else:
+        df = incidense_both2022
+        y_title = 'INCIDENSE'
+        title = 'INCIDENSE - BOTH SEX'
+        number = 2
+    
+    top10 = df.sort_values('Total', ascending=False).head(10)
+    colors = px.colors.qualitative.Pastel
+    color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
+    color_map['Breast'] = 'rgb(78, 108, 138)' 
+    fig = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
+                color='Label', title=title, color_discrete_map=color_map)
+    fig.update_traces(showlegend=False)
+    return [dcc.Graph(figure=fig),CardPosition(y_title,number)]
+
 image = dbc.Row(
     dbc.Col(
         [
             html.Img(src='assets/images/Tumores.png',className='imagen_tumor border'),
-            html.P("https://www.verywellhealth.com/what-does-malignant-and-benign-mean-514240")
         ],className='text-fuente'
 ),className='content-center align-content mt-4')
 
@@ -167,7 +304,8 @@ div_interpretación = html.Div(
                 html.H3('Understanding Tumor Characteristics'.upper(),className='SanSerif text-margin'),
                 html.Div(accordion, className='accordion')
             ],
-            className='container contentx-center'
+            className='container contentx-center',
+            id='features'
         ),
     ]
 )
@@ -405,7 +543,8 @@ div_modelo = html.Div(
             ],
             className='container contentx-center'
         ),
-    ],className='margin-10 mb-20'
+    ],className='margin-10 mb-20',
+    id='modelo'
 )
 
 model_scalerpath = 'assets/models/scaler_ModelMean.sav'
@@ -602,8 +741,22 @@ def update_input_values(value):
     return lista_error
 
 
+
+fuentes = html.Div([
+        html.H3('RESOURCES',className='title-fuente'),
+        html.Div([
+        html.Ol([
+            html.Li("https://www.breastcancer.org/es/tipos/cancer-de-mama-en-hombres"),
+            html.Li("https://gco.iarc.fr/today/online-analysis-map"),
+            html.Li("https://www.kaggle.com/datasets/mragpavank/breast-cancer/data"),
+            html.Li("https://www.verywellhealth.com/what-does-malignant-and-benign-mean-514240"),
+            html.Li("https://gco.iarc.who.int/today/en/dataviz/pie?mode=cancer&group_populations=1&populations=900&sexes=2"),
+        ],className='div_lista')
+    ],className='fuentes_div')
+],className='container contentx-center ')
+
 app.layout = html.Div([
-    navbar2,Titulo,image,div_interpretación,row_table,div_figure,div_modelo
+    navbar2,links,div_know,div_stadistics,Titulo,image,div_interpretación,row_table,div_figure,div_modelo,fuentes
 ],className='body all')
 
 
