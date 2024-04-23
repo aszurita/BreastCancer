@@ -1,0 +1,33 @@
+Label,Cancer code,Country code (ISO/UN),Alpha‑3 code,Sex,ASR (World),Crude rate,Cumulative risk,Total
+Breast,20,218,N.A.,2,39.46,43.09,,3903
+Cervix uteri,23,218,N.A.,2,17.66,19.79,,1792
+Colorectum,41,218,N.A.,2,12.55,15.06,,1364
+Other specified cancers,37,218,N.A.,2,12.09,15.05,,1363
+Stomach,7,218,N.A.,2,10.02,12.55,,1137
+Thyroid,32,218,N.A.,2,11.05,11.94,,1081
+Corpus uteri,24,218,N.A.,2,8.02,8.66,,784
+Non-Hodgkin lymphoma,34,218,N.A.,2,6.73,7.71,,698
+"Trachea, bronchus and lung",15,218,N.A.,2,6.04,7.55,,684
+Leukaemia,36,218,N.A.,2,6.12,6.41,,581
+Liver and intrahepatic bile ducts,11,218,N.A.,2,5.02,6.32,,572
+Ovary,25,218,N.A.,2,5.12,5.6,,507
+Pancreas,13,218,N.A.,2,3.84,4.89,,443
+Unspecified sites,38,218,N.A.,2,3.21,3.81,,345
+" Brain, central nervous system",31,218,N.A.,2,3.5,3.77,,341
+Melanoma of skin,16,218,N.A.,2,2.22,2.63,,238
+Kidney,29,218,N.A.,2,2.38,2.59,,235
+Bladder,30,218,N.A.,2,1.37,1.77,,160
+Gallbladder,12,218,N.A.,2,1.29,1.55,,140
+"Lip, oral cavity",1,218,N.A.,2,1.15,1.37,,124
+Multiple myeloma,35,218,N.A.,2,1.15,1.31,,119
+Hodgkin lymphoma,33,218,N.A.,2,1.11,1.2,,109
+Vulva,21,218,N.A.,2,0.66,0.81,,73
+Oesophagus,6,218,N.A.,2,0.35,0.47,,43
+Salivary glands,2,218,N.A.,2,0.27,0.39,,35
+Oropharynx,3,218,N.A.,2,0.29,0.34,,31
+Vagina,22,218,N.A.,2,0.28,0.33,,30
+Larynx,14,218,N.A.,2,0.2,0.24,,22
+Nasopharynx,4,218,N.A.,2,0.13,0.18,,16
+Mesothelioma,18,218,N.A.,2,0.11,0.14,,13
+Kaposi sarcoma,19,218,N.A.,2,0.1,0.11,,10
+Hypopharynx,5,218,N.A.,2,0.04,0.06,,5

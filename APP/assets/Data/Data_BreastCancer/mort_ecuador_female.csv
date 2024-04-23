@@ -1,0 +1,33 @@
+Label,Cancer code,Country code (ISO/UN),Alpha‑3 code,Sex,ASR (World),Crude rate,Cumulative risk,Total
+Breast,20,218,N.A.,2,11.16,12.74,,1154
+Cervix uteri,23,218,N.A.,2,8.87,10.37,,939
+Stomach,7,218,N.A.,2,7.97,10.28,,931
+Colorectum,41,218,N.A.,2,5.97,7.61,,689
+"Trachea, bronchus and lung",15,218,N.A.,2,4.76,6,,543
+Liver and intrahepatic bile ducts,11,218,N.A.,2,4.57,5.79,,524
+Leukaemia,36,218,N.A.,2,4.27,4.73,,428
+Pancreas,13,218,N.A.,2,3.43,4.41,,399
+Non-Hodgkin lymphoma,34,218,N.A.,2,3.27,3.93,,356
+Ovary,25,218,N.A.,2,3.23,3.65,,331
+" Brain, central nervous system",31,218,N.A.,2,2.65,3.01,,273
+Corpus uteri,24,218,N.A.,2,2.15,2.46,,223
+Thyroid,32,218,N.A.,2,1.27,1.63,,148
+Multiple myeloma,35,218,N.A.,2,0.99,1.16,,105
+Kidney,29,218,N.A.,2,0.92,1.1,,100
+Gallbladder,12,218,N.A.,2,0.77,0.96,,87
+Melanoma of skin,16,218,N.A.,2,0.66,0.88,,80
+Bladder,30,218,N.A.,2,0.55,0.81,,73
+"Lip, oral cavity",1,218,N.A.,2,0.5,0.64,,58
+Hodgkin lymphoma,33,218,N.A.,2,0.33,0.38,,34
+Oesophagus,6,218,N.A.,2,0.3,0.4,,36
+Vulva,21,218,N.A.,2,0.23,0.31,,28
+Oropharynx,3,218,N.A.,2,0.12,0.15,,14
+Salivary glands,2,218,N.A.,2,0.1,0.15,,14
+Larynx,14,218,N.A.,2,0.1,0.14,,13
+Mesothelioma,18,218,N.A.,2,0.09,0.12,,11
+Vagina,22,218,N.A.,2,0.07,0.1,,9
+Nasopharynx,4,218,N.A.,2,0.05,0.08,,7
+Kaposi sarcoma,19,218,N.A.,2,0.03,0.04,,4
+Hypopharynx,5,218,N.A.,2,0.02,0.03,,3
+Other specified cancers,37,218,N.A.,2,5.03,6.54,,592
+Unspecified sites,38,218,N.A.,2,2.61,3.25,,294

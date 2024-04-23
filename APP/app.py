@@ -97,7 +97,22 @@ buttons = html.Div([
     ],className='col-iguales')
 ],className='container_botones')
 
-
+buttons_ecuador = html.Div([
+    html.Div([
+        html.P('INCIDENCE'),
+        html.Div([
+            dbc.Button('BothSex',id='inci-bothsex_ecuador',className='buttons'),
+            dbc.Button('Female',id='inci-female_ecuador',className='buttons')
+        ],className='spacing-buttons')
+    ],className='col-iguales'),
+    html.Div([
+        html.P('MORTALITY'),
+        html.Div([
+            dbc.Button('BothSex',id='mort-bothsex_ecuador',className='buttons'),
+            dbc.Button('Female',id='mort-female_ecuador',className='buttons')
+        ],className='spacing-buttons')
+    ],className='col-iguales')
+],className='container_botones')
 
 
 columns  = ['Label','Total']
@@ -105,6 +120,12 @@ incidense_both2022 = pd.read_csv('assets/Data/Data_BreastCancer/incidences2022_b
 incidense_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/incidense2022_females.csv')[columns]
 mort_both2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_2022_bothSex.csv')[columns]
 mort_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_2022_females.csv')[columns]
+
+ecuador_incidense_both2022 = pd.read_csv('assets/Data/Data_BreastCancer/incidences_ecuador_bothsex.csv')[columns]
+ecuador_incidense_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/incidences _ecuador_females.csv')[columns]
+ecuador_mort_both2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_ecuador_bothsex.csv')[columns]
+ecuador_mort_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_ecuador_female.csv')[columns]
+
 
 def initial_figure():
     df = incidense_both2022
@@ -119,26 +140,52 @@ def initial_figure():
     fig.update_traces(showlegend=False)
     return fig
 
-def CardPosition(type,numero):
+
+def initial_figure_ecuador():
+    df = ecuador_incidense_both2022
+    y_title = 'INCIDENSE'
+    title = 'INCIDENSE - BOTH SEX - ECUADOR'
+    top10 = df.sort_values('Total', ascending=False).head(10)
+    colors = px.colors.qualitative.Pastel
+    color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
+    color_map['Breast'] = 'rgb(78, 108, 138)'
+    fig = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
+                color='Label', title=title, color_discrete_map=color_map)
+    fig.update_traces(showlegend=False)
+    return fig
+
+
+def CardPosition(type,numero,country='WORLD'):
     msg = ''
     if type=='INCIDENSE':
         msg = 'With the most incidents'
     else : 
         msg = 'Deadliest'
     return html.Div([
-        html.P('WORLD',className='title'),
+        html.P(country,className='title'),
         html.P(numero,className='Number'),
         html.P(msg,className='msg')
     ],className='columnscenter margin-left')
 
 div_stadistics = html.Div([
     html.Div(className='circle'),
-    html.H3('STATISTICS IN THE WORLD'),
+    html.Div(html.Img(src='assets/images/ecuador.png',className='imagen_ecuador'),className='bandera_ecuador'),
+    html.H3('STATISTICS IN THE WORLD 2022'),
     buttons,
     html.Div([dcc.Graph(id='grafico', figure=initial_figure()),
             CardPosition('INCIDENSE',2)]
-    ,id='contenidoGrafico',className='contenidoGrafico')
+    ,id='contenidoGrafico',className='contenidoGrafico'),
+    html.Div([
+        html.H3('MOST COMMON CANCER IN DIFFERENT COUNTRIES'),
+        html.Img(src='assets/images/Mapa.svg')
+    ],className='col-mapa'),
+    html.H3('STATISTICS IN ECUADOR 2022'),
+    buttons_ecuador,
+    html.Div([dcc.Graph(id='grafico2', figure=initial_figure_ecuador()),
+            CardPosition('INCIDENSE',1,'ECUADOR')]
+    ,id='contenidoGrafico_ecuador',className='contenidoGrafico'),
 ],className='center-divstadistics container')
+
 
 
 @app.callback(
@@ -187,6 +234,55 @@ def graphInicial(incibothsex, incifemale, mortbothsex, mortfemale):
                 color='Label', title=title, color_discrete_map=color_map)
     fig.update_traces(showlegend=False)
     return [dcc.Graph(figure=fig),CardPosition(y_title,number)]
+
+
+@app.callback(
+    Output('contenidoGrafico_ecuador', 'children'),
+    [
+        Input('inci-bothsex_ecuador', 'n_clicks'),
+        Input('inci-female_ecuador', 'n_clicks'),
+        Input('mort-bothsex_ecuador', 'n_clicks'),
+        Input('mort-female_ecuador', 'n_clicks'),
+    ],
+    prevent_initial_call=True
+)
+def graphInicialEcuador(incibothsex, incifemale, mortbothsex, mortfemale):
+    ctx = dash.callback_context
+    button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    df = ''
+    y_title = ''
+    title = ''
+    number = 1
+    if button_id == 'inci-female_ecuador':
+        df = ecuador_incidense_female2022
+        y_title = 'INCIDENSE'
+        title = 'INCIDENSE - FEMALE - ECUADOR'
+        number = 1
+    elif button_id == 'mort-bothsex_ecuador':
+        df = ecuador_mort_both2022
+        y_title = 'MORTALITY'
+        title = 'MORTALITY - BOTH SEX - ECUADOR'
+        number = 4
+    elif button_id == 'mort-female_ecuador':
+        df = ecuador_mort_female2022
+        y_title = 'MORTALITY'
+        title = 'MORTALITY - FEMALE - ECUADOR'
+        number = 1
+    else:
+        df = ecuador_incidense_both2022
+        y_title = 'INCIDENSE'
+        title = 'INCIDENSE - BOTH SEX - ECUADOR'
+        number = 1
+    
+    top10 = df.sort_values('Total', ascending=False).head(10)
+    colors = px.colors.qualitative.Pastel
+    color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
+    color_map['Breast'] = 'rgb(78, 108, 138)' 
+    figEcua = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
+                color='Label', title=title, color_discrete_map=color_map)
+    figEcua.update_traces(showlegend=False)
+    return [dcc.Graph(figure=figEcua),CardPosition(y_title,number,'ECUADOR')]
+
 
 image = dbc.Row(
     dbc.Col(

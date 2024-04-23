@@ -563,3 +563,30 @@
     justify-content: center;
     align-items: center;
 }
+
+.col-mapa{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.bandera_ecuador{
+    position: absolute;
+    top: 1650px;
+    left: 70px;
+    width: 150px;
+    height: 150px;
+    border-radius: 25%;
+}
+.imagen_ecuador{
+    width: 200px;
+    height: 150px;
+    border-radius: 25%;
+    box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transition: transform 0.5s ease;
+}
+.imagen_ecuador:hover {
+    transform: scale(1.2);
+}

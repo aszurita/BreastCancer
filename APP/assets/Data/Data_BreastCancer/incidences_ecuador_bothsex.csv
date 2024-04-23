@@ -1,0 +1,36 @@
+Label,Cancer code,Country code (ISO/UN),Alpha‑3 code,Sex,ASR (World),Crude rate,Cumulative risk,Total
+Breast,20,218,N.A.,0,39.46,43.09,,3903
+Prostate,27,218,N.A.,0,34.95,38.16,,3456
+Cervix uteri,23,218,N.A.,0,17.66,19.79,,1792
+Stomach,7,218,N.A.,0,12.75,14.86,,2692
+Colorectum,41,218,N.A.,0,12.35,13.97,,2531
+Corpus uteri,24,218,N.A.,0,8.02,8.66,,784
+Non-Hodgkin lymphoma,34,218,N.A.,0,7.43,8.08,,1463
+Thyroid,32,218,N.A.,0,6.71,7.12,,1290
+Leukaemia,36,218,N.A.,0,6.53,6.74,,1220
+"Trachea, bronchus and lung",15,218,N.A.,0,6.29,7.44,,1348
+Liver and intrahepatic bile ducts,11,218,N.A.,0,5.16,6.07,,1100
+Ovary,25,218,N.A.,0,5.12,5.6,,507
+Testis,28,218,N.A.,0,3.78,4.01,,363
+Pancreas,13,218,N.A.,0,3.65,4.27,,773
+" Brain, central nervous system",31,218,N.A.,0,3.64,3.81,,691
+Bladder,30,218,N.A.,0,3.21,3.82,,692
+Kidney,29,218,N.A.,0,3.09,3.22,,583
+Melanoma of skin,16,218,N.A.,0,2.46,2.71,,491
+Penis,26,218,N.A.,0,1.39,1.53,,139
+Multiple myeloma,35,218,N.A.,0,1.39,1.52,,276
+"Lip, oral cavity",1,218,N.A.,0,1.2,1.35,,244
+Hodgkin lymphoma,33,218,N.A.,0,1.16,1.24,,224
+Gallbladder,12,218,N.A.,0,1.05,1.17,,212
+Oesophagus,6,218,N.A.,0,0.87,1.06,,192
+Larynx,14,218,N.A.,0,0.75,0.82,,148
+Vulva,21,218,N.A.,0,0.66,0.81,,73
+Oropharynx,3,218,N.A.,0,0.44,0.47,,86
+Salivary glands,2,218,N.A.,0,0.39,0.46,,84
+Kaposi sarcoma,19,218,N.A.,0,0.34,0.38,,68
+Vagina,22,218,N.A.,0,0.28,0.33,,30
+Nasopharynx,4,218,N.A.,0,0.16,0.18,,33
+Mesothelioma,18,218,N.A.,0,0.13,0.14,,26
+Hypopharynx,5,218,N.A.,0,0.08,0.09,,17
+Other specified cancers,37,218,N.A.,0,12.67,14.79,,2679
+Unspecified sites,38,218,N.A.,0,3.32,3.74,,678
