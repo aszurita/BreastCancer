@@ -10,3 +10,4 @@ graphviz
 pydotplus
 IPython
 pickle-mixin
+gunicorn
