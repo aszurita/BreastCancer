@@ -716,50 +716,11 @@ def update_output(radius, texture, perimeter, area, smoothness, compactness, con
                     ],style={'margin-top':'20px'}),
                     html.Div([
                         html.Div(dcc.Graph(figure=fig_probabilty)),
-                        html.Div([
-                            html.Div([
-                                html.Label('ITERATION NUMBER',htmlFor='iteration',className='input-number'),
-                                dcc.Input(
-                                    id='iteration', 
-                                    type='number',
-                                    min=1,  
-                                    max=180, 
-                                    step=1,  
-                                    placeholder='Iteration number',className='input-iteration'
-                                )
-                            ],className='col-iteration'),
-                            html.Div([
-                                dbc.Button('GENERATE TREE',id='button-iteration',className='button-pred'),
-                            ])
-                        ],className='div_iteration')
                     ],className='div-work'),
                     html.Div(id='tree-iterator'),
                 ]
         return html1,html2
     return html.Div(),html.Div()
-
-@callback(
-    Output('tree-iterator','children'),
-    Input('button-iteration','n_clicks'),
-    State('iteration','value')
-)
-def grapg_iterationTree(n_clicks,value):
-    tree_image=html.Div()
-    if n_clicks != None and n_clicks > 0 and value != None:
-        columns = ['radius_mean', 'texture_mean', 'perimeter_mean', 'area_mean', 'smoothness_mean', 'compactness_mean',
-                    'concavity_mean', 'concave points_mean', 'symmetry_mean', 'fractal_dimension_mean']
-        
-        dot_data = tree.export_graphviz(gbc.estimators_[value-1, 0], out_file=None, 
-                                feature_names=columns,  
-                                filled=True)
-        graph = graphviz.Source(dot_data, format="png") 
-        graph.render("decision_tree")
-        encoded_image = base64.b64encode(open('decision_tree.png', 'rb').read())
-        tree_image = html.Div([
-                html.H2(f"TREE # {value}"),
-                html.Img(src='data:image/png;base64,{}'.format(encoded_image.decode()),className='treeImage')
-        ])
-    return tree_image
 
 @callback(
     [
