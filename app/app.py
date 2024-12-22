@@ -30,9 +30,7 @@ warnings.filterwarnings('ignore')
 
 
 app = Dash(__name__, suppress_callback_exceptions=True,external_stylesheets=external_stylesheets)
-server = app.server
-# building the navigation bar
-# https://github.com/facultyai/dash-bootstrap-components/blob/master/examples/advanced-component-usage/Navbars.py
+server = app.servergit
 
 Titulo = dbc.Row(
     html.H1('Prediction of malignant and benign tumors in breast cancer'.upper()),class_name='margintTitle' 
