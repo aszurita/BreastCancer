@@ -30,7 +30,7 @@ warnings.filterwarnings('ignore')
 
 
 app = Dash(__name__, suppress_callback_exceptions=True,external_stylesheets=external_stylesheets)
-server = app.servergit
+server = app.server
 
 Titulo = dbc.Row(
     html.H1('Prediction of malignant and benign tumors in breast cancer'.upper()),class_name='margintTitle' 
@@ -855,4 +855,4 @@ app.layout = html.Div([
 
 
 if __name__ == '__main__':
-    app.run_server(host='127.0.0.1',port=8020 ,debug=True)
+    app.run_server(debug=True)
