@@ -38,8 +38,8 @@ Titulo = dbc.Row(
 
 navbar2 = dbc.Row(
             [
-                dbc.Col(html.Img(src="assets/images/logo_espol.png", height="41px",className="col1_1")),
-                dbc.Col(html.H5(""),style={"color":"white","font-size":"10vw"},className="col1_1"),
+                dbc.Col(html.Img(src="assets/images/logo_espol.png", height="41px"),className="col1_1"),
+                dbc.Col(html.H5("BREAST CANCER PREDICTION TOOL"),style={"color":"white"},className="col1_1"),
                 dbc.Col(html.H5("ANGELO ZURITA"),style={"color":"white","font-size":"10vw"},className="col1_1")
             ],
             align='center',
@@ -127,8 +127,8 @@ ecuador_mort_female2022 = pd.read_csv('assets/Data/Data_BreastCancer/mort_ecuado
 
 def initial_figure():
     df = incidense_both2022
-    y_title = 'INCIDENSE'
-    title = 'INCIDENSE - BOTH SEX'
+    y_title = 'INCIDENCE'
+    title = 'INCIDENCE - BOTH SEX'
     top10 = df.sort_values('Total', ascending=False).head(10)
     colors = px.colors.qualitative.Pastel
     color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
@@ -141,8 +141,8 @@ def initial_figure():
 
 def initial_figure_ecuador():
     df = ecuador_incidense_both2022
-    y_title = 'INCIDENSE'
-    title = 'INCIDENSE - BOTH SEX - ECUADOR'
+    y_title = 'INCIDENCE'
+    title = 'INCIDENCE - BOTH SEX - ECUADOR'
     top10 = df.sort_values('Total', ascending=False).head(10)
     colors = px.colors.qualitative.Pastel
     color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
@@ -155,7 +155,7 @@ def initial_figure_ecuador():
 
 def CardPosition(type,numero,country='WORLD'):
     msg = ''
-    if type=='INCIDENSE':
+    if type=='INCIDENCE':
         msg = 'With the most incidents'
     else : 
         msg = 'Deadliest'
@@ -171,7 +171,7 @@ div_stadistics = html.Div([
     html.H3('STATISTICS IN THE WORLD 2022'),
     buttons,
     html.Div([dcc.Graph(id='grafico', figure=initial_figure()),
-            CardPosition('INCIDENSE',2)]
+            CardPosition('INCIDENCE',2)]
     ,id='contenidoGrafico',className='contenidoGrafico'),
     html.Div([
         html.H3('MOST COMMON CANCER IN DIFFERENT COUNTRIES'),
@@ -180,7 +180,7 @@ div_stadistics = html.Div([
     html.H3('STATISTICS IN ECUADOR 2022'),
     buttons_ecuador,
     html.Div([dcc.Graph(id='grafico2', figure=initial_figure_ecuador()),
-            CardPosition('INCIDENSE',1,'ECUADOR')]
+            CardPosition('INCIDENCE',1,'ECUADOR')]
     ,id='contenidoGrafico_ecuador',className='contenidoGrafico'),
 ],className='center-divstadistics container')
 
@@ -205,8 +205,8 @@ def graphInicial(incibothsex, incifemale, mortbothsex, mortfemale):
     number = 2
     if button_id == 'inci-female':
         df = incidense_female2022
-        y_title = 'INCIDENSE'
-        title = 'INCIDENSE - FEMALE'
+        y_title = 'INCIDENCE'
+        title = 'INCIDENCE - FEMALE'
         number = 1
     elif button_id == 'mort-bothsex':
         df = mort_both2022
@@ -220,8 +220,8 @@ def graphInicial(incibothsex, incifemale, mortbothsex, mortfemale):
         number = 1
     else:
         df = incidense_both2022
-        y_title = 'INCIDENSE'
-        title = 'INCIDENSE - BOTH SEX'
+        y_title = 'INCIDENCE'
+        title = 'INCIDENCE - BOTH SEX'
         number = 2
     
     top10 = df.sort_values('Total', ascending=False).head(10)
@@ -253,8 +253,8 @@ def graphInicialEcuador(incibothsex, incifemale, mortbothsex, mortfemale):
     number = 1
     if button_id == 'inci-female_ecuador':
         df = ecuador_incidense_female2022
-        y_title = 'INCIDENSE'
-        title = 'INCIDENSE - FEMALE - ECUADOR'
+        y_title = 'INCIDENCE'
+        title = 'INCIDENCE - FEMALE - ECUADOR'
         number = 1
     elif button_id == 'mort-bothsex_ecuador':
         df = ecuador_mort_both2022
@@ -268,8 +268,8 @@ def graphInicialEcuador(incibothsex, incifemale, mortbothsex, mortfemale):
         number = 1
     else:
         df = ecuador_incidense_both2022
-        y_title = 'INCIDENSE'
-        title = 'INCIDENSE - BOTH SEX - ECUADOR'
+        y_title = 'INCIDENCE'
+        title = 'INCIDENCE - BOTH SEX - ECUADOR'
         number = 1
     
     top10 = df.sort_values('Total', ascending=False).head(10)
