@@ -28,6 +28,9 @@ warnings.filterwarnings('ignore')
 # https://bootswatch.com/lux/
 # external_stylesheets = [dbc.themes.SANDSTONE]
 
+#Fix Define a constant instead of duplicating this literal 'rgb(78, 108, 138)' 4 times
+CustomBlue = 'rgb(78, 108, 138)'
+
 
 app = Dash(__name__, suppress_callback_exceptions=True,external_stylesheets=external_stylesheets)
 server = app.server
@@ -132,7 +135,7 @@ def initial_figure():
     top10 = df.sort_values('Total', ascending=False).head(10)
     colors = px.colors.qualitative.Pastel
     color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
-    color_map['Breast'] = 'rgb(78, 108, 138)'
+    color_map['Breast'] = CustomBlue
     fig = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
                 color='Label', title=title, color_discrete_map=color_map)
     fig.update_traces(showlegend=False)
@@ -146,7 +149,7 @@ def initial_figure_ecuador():
     top10 = df.sort_values('Total', ascending=False).head(10)
     colors = px.colors.qualitative.Pastel
     color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
-    color_map['Breast'] = 'rgb(78, 108, 138)'
+    color_map['Breast'] = CustomBlue
     fig = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
                 color='Label', title=title, color_discrete_map=color_map)
     fig.update_traces(showlegend=False)
@@ -227,7 +230,7 @@ def graphInicial(incibothsex, incifemale, mortbothsex, mortfemale):
     top10 = df.sort_values('Total', ascending=False).head(10)
     colors = px.colors.qualitative.Pastel
     color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
-    color_map['Breast'] = 'rgb(78, 108, 138)' 
+    color_map['Breast'] = CustomBlue 
     fig = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
                 color='Label', title=title, color_discrete_map=color_map)
     fig.update_traces(showlegend=False)
@@ -275,7 +278,7 @@ def graphInicialEcuador(incibothsex, incifemale, mortbothsex, mortfemale):
     top10 = df.sort_values('Total', ascending=False).head(10)
     colors = px.colors.qualitative.Pastel
     color_map = {label: colors[0] for label in top10['Label'] if label != 'Breast'}
-    color_map['Breast'] = 'rgb(78, 108, 138)' 
+    color_map['Breast'] = CustomBlue 
     figEcua = px.bar(top10, x='Label', y='Total', text_auto=True, labels={'Total': y_title},
                 color='Label', title=title, color_discrete_map=color_map)
     figEcua.update_traces(showlegend=False)
