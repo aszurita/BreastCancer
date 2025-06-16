@@ -59,7 +59,7 @@ links = html.Div([
 
 
 gender_info = {'FEMALE':['1 in 8','assets/images/female.png'],'MALE':['1 in 1000','assets/images/male.png']}
-def cardInfo(gender):
+def card_info(gender):
     card = html.Div(className='card', children=[
         html.Img(src=gender_info[gender][1], alt='gender',className='image_card'),
         html.Div(className='card__content', children=[
@@ -76,8 +76,8 @@ div_know = html.Div([
             html.H3('The average risk of being diagnosed with breast cancer at some point in their lives is',className='text'),
         ],className='subtitle-div-know'),
     html.Div([
-                html.Div([cardInfo('FEMALE')]),
-                html.Div([cardInfo('MALE')]),
+                html.Div([card_info('FEMALE')]),
+                html.Div([card_info('MALE')]),
             ],className='card_row'),
 ],className='div_know')
 
