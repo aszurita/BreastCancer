@@ -522,13 +522,14 @@ div_figure = html.Div([
     ],className='center_fig'
 )
 
-def input_Characteristic(title, id=None):
-    if id is None:
-        id = title  # If no ID is provided, use title as the ID
+# Rename this variable; it shadows a builtin
+def input_Characteristic(title, input_id=None):
+    if input_id is None:
+        input_id = title 
     return html.Div([
-        html.Label(title, htmlFor=id), 
+        html.Label(title, htmlFor=input_id), 
         dcc.Input(
-            id=id,  # Set a unique ID for each input for callback purposes
+            id=input_id,
             type='number',
             step=0.00001,  
             placeholder='Enter value',
